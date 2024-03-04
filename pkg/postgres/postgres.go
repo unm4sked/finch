@@ -4,35 +4,57 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+const (
+	_defaultMaxPoolSize  = 1
+	_defaultConnAttempts = 10
+	_defaultConnTimeout  = time.Second
+)
+
 type Postgres struct {
-	Pool *pgxpool.Pool
+	maxPoolSize int
+	connTimeout time.Duration
+	Pool        *pgxpool.Pool
 }
 
-func New() (*Postgres, error) {
+func New(opts ...Option) (*Postgres, error) {
+
+	fmt.Println(opts)
+	pg := &Postgres{
+		maxPoolSize: _defaultMaxPoolSize,
+		connTimeout: _defaultConnAttempts,
+	}
+
+	for _, opt := range opts {
+		opt(pg)
+	}
+
 	connStr := "user=postgres dbname=app sslmode=disable password=password host=localhost"
 	pgConfig, err := pgxpool.ParseConfig(connStr)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to parse config to connect to database: %v\n", err)
 		return nil, err
 	}
-	pool, err := pgxpool.NewWithConfig(context.Background(), pgConfig)
+
+	pgConfig.MaxConns = int32(pg.maxPoolSize)
+	pgConfig.MaxConns = int32(pg.maxPoolSize)
+
+	pg.Pool, err = pgxpool.NewWithConfig(context.Background(), pgConfig)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		return nil, err
 	}
 
-	if err := pool.Ping(context.Background()); err != nil {
+	if err := pg.Pool.Ping(context.Background()); err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to ping database: %v\n", err)
 		return nil, err
 	}
 
-	return &Postgres{
-		Pool: pool,
-	}, nil
+	return pg, nil
 }
 
 func (p *Postgres) Close() {

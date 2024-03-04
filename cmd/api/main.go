@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/unm4sked/finch/pkg/postgres"
@@ -11,7 +12,7 @@ import (
 func main() {
 	fmt.Println("Application started...")
 
-	database, err := postgres.New()
+	database, err := postgres.New(postgres.MaxPoolSize(1), postgres.ConnTimeout(time.Second))
 	if err != nil {
 		log.Fatal(err)
 	}
