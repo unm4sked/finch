@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/gofiber/fiber/v2"
 	"log"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
+
 	"github.com/unm4sked/finch/internal/api/routes"
+	"github.com/unm4sked/finch/internal/configuration"
 	"github.com/unm4sked/finch/pkg/postgres"
 )
 
@@ -19,9 +21,12 @@ func main() {
 	}
 	defer database.Close()
 
+	configurationService := configuration.NewService(configuration.NewPostgresRepository(*database))
+
 	app := fiber.New()
 	api := app.Group("/api").Group("/v1")
-	routes.ConfigurationRouter(api)
+
+	routes.ConfigurationRouter(api, configurationService)
 
 	log.Fatal(app.Listen(":3000"))
 

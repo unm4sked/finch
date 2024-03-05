@@ -23,7 +23,6 @@ type Postgres struct {
 
 func New(opts ...Option) (*Postgres, error) {
 
-	fmt.Println(opts)
 	pg := &Postgres{
 		maxPoolSize: _defaultMaxPoolSize,
 		connTimeout: _defaultConnAttempts,

@@ -1,17 +1,21 @@
 package configuration
 
-import "errors"
+import (
+	"errors"
+)
 
 type Service interface {
 	Create() error
 }
 
 type service struct {
-	// Deps
+	repository Repository
 }
 
-func New() Service {
-	return &service{}
+func NewService(repository Repository) Service {
+	return &service{
+		repository: repository,
+	}
 }
 
 func (s *service) Create() error {

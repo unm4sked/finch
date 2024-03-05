@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   postgres:
     image: postgres:14-alpine
@@ -17,6 +19,17 @@ services:
       - 8082:8080
     networks:
       - app
+
+  # server:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports: 
+  #     - 3000:3000
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - app
       
 networks:
   app:

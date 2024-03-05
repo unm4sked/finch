@@ -1,25 +1,28 @@
 package handlers
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+	"github.com/unm4sked/finch/internal/configuration"
+)
 
-func GetConfigurationById() fiber.Handler {
+func GetConfigurationById(service configuration.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		return c.JSON([]string{})
 	}
 }
 
-func GetConfigurations() fiber.Handler {
+func GetConfigurations(service configuration.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error { return c.JSON([]string{}) }
 }
 
-func DeleteConfiguration() fiber.Handler {
+func DeleteConfiguration(service configuration.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error { return c.JSON([]string{}) }
 }
 
-func PatchConfiguration() fiber.Handler {
+func PatchConfiguration(service configuration.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error { return c.JSON([]string{}) }
 }
 
-func CreateConfiguration() fiber.Handler {
+func CreateConfiguration(service configuration.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error { return c.JSON([]string{}) }
 }

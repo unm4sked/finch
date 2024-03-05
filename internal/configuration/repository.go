@@ -3,9 +3,10 @@ package configuration
 import (
 	"context"
 	"errors"
+	"log"
+
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/unm4sked/finch/pkg/postgres"
-	"log"
 )
 
 type Repository interface {
