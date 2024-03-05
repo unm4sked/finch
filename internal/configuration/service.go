@@ -6,8 +6,8 @@ type Service interface {
 	Create() error
 }
 
-type service struct{
-	// Deps 
+type service struct {
+	// Deps
 }
 
 func New() Service {
@@ -15,5 +15,5 @@ func New() Service {
 }
 
 func (s *service) Create() error {
-	return errors.New("Error")
+	return errors.New("error")
 }

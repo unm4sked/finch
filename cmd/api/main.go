@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/gofiber/fiber/v2"
 	"log"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/unm4sked/finch/internal/api/routes"
 	"github.com/unm4sked/finch/pkg/postgres"
 )
 
@@ -19,7 +20,8 @@ func main() {
 	defer database.Close()
 
 	app := fiber.New()
-	app.Group("/api").Group("/v1")
+	api := app.Group("/api").Group("/v1")
+	routes.ConfigurationRouter(api)
 
 	log.Fatal(app.Listen(":3000"))
 
