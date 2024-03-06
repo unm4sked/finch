@@ -15,7 +15,7 @@ import (
 func main() {
 	fmt.Println("Application started...")
 
-	database, err := postgres.New(postgres.MaxPoolSize(1), postgres.ConnTimeout(time.Second))
+	database, err := postgres.Connect(postgres.MaxPoolSize(1), postgres.ConnTimeout(time.Second))
 	if err != nil {
 		log.Fatal(err)
 	}
