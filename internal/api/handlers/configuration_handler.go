@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"net/http"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/unm4sked/finch/internal/api/responses"
 	"github.com/unm4sked/finch/internal/configuration"
 )
 
@@ -10,11 +13,9 @@ func GetConfigurationById(service configuration.Service) fiber.Handler {
 		id := c.Params("id")
 		configuration, err := service.GetConfiguration(id)
 		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"error": err,
-			})
+			return c.Status(http.StatusBadRequest).JSON(responses.NewFailureResponseBody(err))
 		}
-		return c.JSON(configuration)
+		return c.Status(http.StatusBadGateway).JSON(responses.NewSuccessResponseBody(configuration))
 	}
 }
 
@@ -22,11 +23,9 @@ func GetConfigurations(service configuration.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		configs, err := service.GetConfigurations()
 		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"error": err,
-			})
+			return c.Status(http.StatusBadRequest).JSON(responses.NewFailureResponseBody(err))
 		}
-		return c.JSON(configs)
+		return c.Status(http.StatusBadGateway).JSON(responses.NewSuccessResponseBody(configs))
 	}
 }
 
@@ -35,56 +34,45 @@ func DeleteConfiguration(service configuration.Service) fiber.Handler {
 		id := c.Params("id")
 		err := service.RemoveConfiguration(id)
 		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"error": err,
-			})
+			return c.Status(http.StatusBadRequest).JSON(responses.NewFailureResponseBody(err))
 		}
-		return c.JSON(fiber.Map{
-			"status": "removed",
-		})
+		return c.Status(http.StatusBadGateway).JSON(responses.NewSuccessResponseBody(fiber.Map{}))
 	}
 }
 
 func PatchConfiguration(service configuration.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		type UpdateConfiguration struct {
+		updateConfigurationPayload := struct {
 			Description string `json:"description"`
-		}
-		updateConfig := new(UpdateConfiguration)
+		}{}
 
-		if err := c.BodyParser(updateConfig); err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"error": err,
-			})
+		if err := c.BodyParser(updateConfigurationPayload); err != nil {
+			return c.Status(http.StatusBadRequest).JSON(responses.NewFailureResponseBody(err))
 		}
 		id := c.Params("id")
 
-		err := service.UpdateConfigurationDescription(id, updateConfig.Description)
+		err := service.UpdateConfigurationDescription(id, updateConfigurationPayload.Description)
 		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"error": err,
-			})
+			return c.Status(http.StatusBadRequest).JSON(responses.NewFailureResponseBody(err))
 		}
-		return c.JSON(fiber.Map{
-			"status": "removed",
-		})
+		return c.Status(http.StatusBadGateway).JSON(responses.NewSuccessResponseBody(fiber.Map{}))
 	}
 }
 
 func CreateConfiguration(service configuration.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		type CreateConfiguration struct {
+		createConfigurationPayload := struct {
 			Description string `json:"description"`
+		}{}
+		if err := c.BodyParser(createConfigurationPayload); err != nil {
+			return c.Status(http.StatusBadRequest).JSON(responses.NewFailureResponseBody(err))
 		}
-		createConfig := new(CreateConfiguration)
-		id, err := service.Create(createConfig.Description)
+		id, err := service.Create(createConfigurationPayload.Description)
 		if err != nil {
-			return c.Status(400).JSON(fiber.Map{
-				"error": err,
-			})
+			return c.Status(http.StatusBadRequest).JSON(responses.NewFailureResponseBody(err))
 		}
-		return c.JSON(fiber.Map{
+		return c.Status(http.StatusCreated).JSON(responses.NewSuccessResponseBody(fiber.Map{
 			"id": id,
-		})
+		}))
 	}
 }
