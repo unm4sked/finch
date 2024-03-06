@@ -1,14 +1,13 @@
 package configuration
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/unm4sked/finch/internal/entities"
 )
 
 type Service interface {
-	Create() error
+	Create(description string) (string, error)
 	GetConfigurations() ([]entities.Configuration, error)
 	GetConfiguration(id string) (entities.Configuration, error)
 	RemoveConfiguration(id string) error
@@ -25,9 +24,12 @@ func NewService(repository Repository) Service {
 	}
 }
 
-func (s *service) Create() error {
-	s.repository.CreateConfiguration()
-	return errors.New("not implemented")
+func (s *service) Create(description string) (string, error) {
+	id, err := s.repository.CreateConfiguration(description)
+	if err != nil {
+		return "", err
+	}
+	return id, nil
 }
 
 func (s *service) GetConfigurations() ([]entities.Configuration, error) {

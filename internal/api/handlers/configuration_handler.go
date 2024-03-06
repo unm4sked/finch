@@ -73,8 +73,18 @@ func PatchConfiguration(service configuration.Service) fiber.Handler {
 
 func CreateConfiguration(service configuration.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		service.Create()
-
-		return c.JSON([]string{})
+		type CreateConfiguration struct {
+			Description string `json:"description"`
+		}
+		createConfig := new(CreateConfiguration)
+		id, err := service.Create(createConfig.Description)
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{
+				"error": err,
+			})
+		}
+		return c.JSON(fiber.Map{
+			"id": id,
+		})
 	}
 }

@@ -2,7 +2,6 @@ package configuration
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/jackc/pgx/v5"
@@ -12,7 +11,7 @@ import (
 )
 
 type Repository interface {
-	CreateConfiguration() error
+	CreateConfiguration(description string) (string, error)
 	GetConfigurationById(id string) (entities.Configuration, error)
 	GetConfigurations() ([]entities.Configuration, error)
 	DeleteConfiguration(id string) error
@@ -29,15 +28,13 @@ func NewPostgresRepository(db postgres.Postgres) Repository {
 	}
 }
 
-func (r *repository) CreateConfiguration() error {
-	description := "text text text"
-	tag, err := r.db.Exec(context.Background(), `INSERT INTO configurations (description) VALUES ($1)`, description)
+func (r *repository) CreateConfiguration(description string) (string, error) {
+	_, err := r.db.Exec(context.Background(), `INSERT INTO configurations (description) VALUES ($1)`, description)
 	if err != nil {
-		fmt.Println("Error: ", err)
-		return err
+		return "", err
 	}
-	fmt.Println(tag)
-	return errors.New("hello")
+
+	return "123", nil
 }
 
 func (r *repository) GetConfigurationById(id string) (entities.Configuration, error) {
