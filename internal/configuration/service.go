@@ -3,6 +3,7 @@ package configuration
 import (
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/unm4sked/finch/internal/entities"
 )
 
@@ -25,7 +26,9 @@ func NewService(repository Repository) Service {
 }
 
 func (s *service) Create(description string) (string, error) {
-	id, err := s.repository.CreateConfiguration(description)
+	id := uuid.New().String()
+
+	err := s.repository.CreateConfiguration(id, description)
 	if err != nil {
 		return "", err
 	}

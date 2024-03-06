@@ -11,7 +11,7 @@ import (
 )
 
 type Repository interface {
-	CreateConfiguration(description string) (string, error)
+	CreateConfiguration(id string, description string) error
 	GetConfigurationById(id string) (entities.Configuration, error)
 	GetConfigurations() ([]entities.Configuration, error)
 	DeleteConfiguration(id string) error
@@ -28,13 +28,13 @@ func NewPostgresRepository(db postgres.Postgres) Repository {
 	}
 }
 
-func (r *repository) CreateConfiguration(description string) (string, error) {
-	_, err := r.db.Exec(context.Background(), `INSERT INTO configurations (description) VALUES ($1)`, description)
+func (r *repository) CreateConfiguration(id string, description string) error {
+	_, err := r.db.Exec(context.Background(), `INSERT INTO configurations (id,description) VALUES ($1,$2)`, id, description)
 	if err != nil {
-		return "", err
+		return err
 	}
 
-	return "123", nil
+	return nil
 }
 
 func (r *repository) GetConfigurationById(id string) (entities.Configuration, error) {
