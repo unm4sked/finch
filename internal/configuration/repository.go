@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -14,10 +13,10 @@ import (
 
 type Repository interface {
 	CreateConfiguration() error
-	GetConfigurationById() error
+	GetConfigurationById(id string) (entities.Configuration, error)
 	GetConfigurations() ([]entities.Configuration, error)
-	DeleteConfiguration() error
-	UpdateConfiguration() error
+	DeleteConfiguration(id string) error
+	UpdateConfiguration(id string, description string) error
 }
 
 type repository struct {
@@ -41,14 +40,17 @@ func (r *repository) CreateConfiguration() error {
 	return errors.New("hello")
 }
 
-func (r *repository) GetConfigurationById() error {
-	row := r.db.QueryRow(context.Background(), "select * from configurations LIMIT 1")
-	err := row.Scan()
+func (r *repository) GetConfigurationById(id string) (entities.Configuration, error) {
+	var deafultConfiguration entities.Configuration
+	rows, err := r.db.Query(context.Background(), "SELECT * FROM configurations WHERE id LIKE $1 LIMIT 1", id)
 	if err != nil {
-		log.Println("Error while getting configuration")
-		return err
+		return deafultConfiguration, err
 	}
-	return nil
+	configuration, err := pgx.CollectOneRow(rows, pgx.RowToStructByPos[entities.Configuration])
+	if err != nil {
+		return deafultConfiguration, err
+	}
+	return configuration, nil
 }
 
 func (r *repository) GetConfigurations() ([]entities.Configuration, error) {
@@ -71,10 +73,24 @@ func (r *repository) GetConfigurations() ([]entities.Configuration, error) {
 	return configuratios, nil
 }
 
-func (r *repository) DeleteConfiguration() error {
-	return errors.New("not implemented")
+func (r *repository) DeleteConfiguration(id string) error {
+	_, err := r.db.Exec(context.Background(), "DELETE FROM configurations WHERE id=$1", id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (r *repository) UpdateConfiguration() error {
-	return errors.New("not implemented")
+func (r *repository) UpdateConfiguration(id string, description string) error {
+	config, err := r.GetConfigurationById(id)
+	if err != nil {
+		return err
+	}
+	_, err = r.db.Exec(context.Background(), "UPDATE configurations SET description = $1 WHERE id = $2", description, config.Id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
