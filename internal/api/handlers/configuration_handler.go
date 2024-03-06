@@ -14,7 +14,13 @@ func GetConfigurationById(service configuration.Service) fiber.Handler {
 }
 
 func GetConfigurations(service configuration.Service) fiber.Handler {
-	return func(c *fiber.Ctx) error { return c.JSON([]string{}) }
+	return func(c *fiber.Ctx) error {
+		configs, err := service.GetConfigurations()
+		if err != nil {
+			return c.SendStatus(500)
+		}
+		return c.JSON(configs)
+	}
 }
 
 func DeleteConfiguration(service configuration.Service) fiber.Handler {

@@ -6,14 +6,16 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/unm4sked/finch/internal/entities"
 	"github.com/unm4sked/finch/pkg/postgres"
 )
 
 type Repository interface {
 	CreateConfiguration() error
 	GetConfigurationById() error
-	GetConfigurations() error
+	GetConfigurations() ([]entities.Configuration, error)
 	DeleteConfiguration() error
 	UpdateConfiguration() error
 }
@@ -49,8 +51,24 @@ func (r *repository) GetConfigurationById() error {
 	return nil
 }
 
-func (r *repository) GetConfigurations() error {
-	return errors.New("not implemented")
+func (r *repository) GetConfigurations() ([]entities.Configuration, error) {
+	emptyConfiguratios := make([]entities.Configuration, 0)
+	rows, err := r.db.Query(context.Background(), "SELECT * FROM configurations")
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return emptyConfiguratios, err
+	}
+
+	defer rows.Close()
+
+	configuratios, err := pgx.CollectRows(rows, pgx.RowToStructByName[entities.Configuration])
+
+	if err != nil {
+		fmt.Println("Error while collecting rows", err)
+		return emptyConfiguratios, err
+	}
+
+	return configuratios, nil
 }
 
 func (r *repository) DeleteConfiguration() error {

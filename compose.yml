@@ -7,6 +7,8 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_USERNAME: postgres
       POSTGRES_DB: app
+    ports:
+      - 5432:5432
     networks:
       - app
 

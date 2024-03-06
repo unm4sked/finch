@@ -32,7 +32,7 @@ func New(opts ...Option) (*Postgres, error) {
 		opt(pg)
 	}
 
-	connStr := "user=postgres dbname=app sslmode=disable password=password host=localhost"
+	connStr := "user=postgres dbname=app sslmode=disable password=password host=localhost port=5432"
 	pgConfig, err := pgxpool.ParseConfig(connStr)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to parse config to connect to database: %v\n", err)
