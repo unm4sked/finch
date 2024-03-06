@@ -19,5 +19,6 @@ func NewService(repository Repository) Service {
 }
 
 func (s *service) Create() error {
+	s.repository.CreateConfiguration()
 	return errors.New("error")
 }

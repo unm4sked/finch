@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/unm4sked/finch/internal/configuration"
 )
@@ -24,5 +26,10 @@ func PatchConfiguration(service configuration.Service) fiber.Handler {
 }
 
 func CreateConfiguration(service configuration.Service) fiber.Handler {
-	return func(c *fiber.Ctx) error { return c.JSON([]string{}) }
+	fmt.Println("CreateConfiguration")
+	return func(c *fiber.Ctx) error {
+		service.Create()
+
+		return c.JSON([]string{})
+	}
 }

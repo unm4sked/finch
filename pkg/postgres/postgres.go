@@ -33,7 +33,7 @@ func New(opts ...Option) (*Postgres, error) {
 	}
 
 	// host - localhost / postgre (inside docker)
-	connStr := "user=postgres dbname=app sslmode=disable password=password host=postgres"
+	connStr := "user=postgres dbname=app sslmode=disable password=password host=localhost"
 	pgConfig, err := pgxpool.ParseConfig(connStr)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to parse config to connect to database: %v\n", err)

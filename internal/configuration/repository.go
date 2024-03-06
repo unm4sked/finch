@@ -3,6 +3,7 @@ package configuration
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -28,7 +29,14 @@ func NewPostgresRepository(db postgres.Postgres) Repository {
 }
 
 func (r *repository) CreateConfiguration() error {
-	return errors.New("not implemented")
+	description := "text text text"
+	tag, err := r.db.Exec(context.Background(), `INSERT INTO configurations (description) VALUES ($1)`, description)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return err
+	}
+	fmt.Println(tag)
+	return errors.New("hello")
 }
 
 func (r *repository) GetConfigurationById() error {
