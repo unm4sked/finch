@@ -32,7 +32,6 @@ func New(opts ...Option) (*Postgres, error) {
 		opt(pg)
 	}
 
-	// host - localhost / postgre (inside docker)
 	connStr := "user=postgres dbname=app sslmode=disable password=password host=localhost"
 	pgConfig, err := pgxpool.ParseConfig(connStr)
 	if err != nil {
