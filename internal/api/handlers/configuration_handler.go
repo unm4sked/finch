@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -46,7 +47,8 @@ func PatchConfiguration(service configuration.Service) fiber.Handler {
 			Description string `json:"description"`
 		}{}
 
-		if err := c.BodyParser(updateConfigurationPayload); err != nil {
+		if err := c.BodyParser(&updateConfigurationPayload); err != nil {
+			fmt.Println("ja jebie xd")
 			return c.Status(http.StatusBadRequest).JSON(responses.NewFailureResponseBody(err))
 		}
 		id := c.Params("id")
@@ -55,7 +57,7 @@ func PatchConfiguration(service configuration.Service) fiber.Handler {
 		if err != nil {
 			return c.Status(http.StatusBadRequest).JSON(responses.NewFailureResponseBody(err))
 		}
-		return c.Status(http.StatusBadGateway).JSON(responses.NewSuccessResponseBody(fiber.Map{}))
+		return c.Status(http.StatusOK).JSON(responses.NewSuccessResponseBody(fiber.Map{}))
 	}
 }
 
@@ -64,7 +66,7 @@ func CreateConfiguration(service configuration.Service) fiber.Handler {
 		createConfigurationPayload := struct {
 			Description string `json:"description"`
 		}{}
-		if err := c.BodyParser(createConfigurationPayload); err != nil {
+		if err := c.BodyParser(&createConfigurationPayload); err != nil {
 			return c.Status(http.StatusBadRequest).JSON(responses.NewFailureResponseBody(err))
 		}
 		id, err := service.Create(createConfigurationPayload.Description)

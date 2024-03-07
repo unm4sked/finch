@@ -39,7 +39,7 @@ func (r *repository) CreateConfiguration(id string, description string) error {
 
 func (r *repository) GetConfigurationById(id string) (entities.Configuration, error) {
 	var deafultConfiguration entities.Configuration
-	rows, err := r.db.Query(context.Background(), "SELECT * FROM configurations WHERE id LIKE $1 LIMIT 1", id)
+	rows, err := r.db.Query(context.Background(), "SELECT * FROM configurations WHERE id = $1 LIMIT 1", id)
 	if err != nil {
 		return deafultConfiguration, err
 	}
