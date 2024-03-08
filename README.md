@@ -9,7 +9,14 @@ Normally you probably have these credentials or configurations stored somewhere 
 
 Finch is an application that your customer has access to can complete the data for integration validate it and verify it through an API request. When the integration is ready your backend system can fetch the data for integration, you are assured that it is correct checked and fresh.
 
+## Stack
+1. Go
+1. Postgres
+1. Docker
+1. Makefile
+1. Fiber - go http framework
+
 ## How to run locally
 1. install packages using `go mod download`
 1. create postgres db locally using docker-compose `docker-compose up`
-1. run service using `go run cmd/api/main.go`
+1. run service using `make run-dev`
