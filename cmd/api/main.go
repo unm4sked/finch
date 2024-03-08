@@ -19,6 +19,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	defer database.Close()
 
 	configurationService := configuration.NewService(configuration.NewPostgresRepository(*database))
