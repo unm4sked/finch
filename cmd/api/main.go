@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/unm4sked/finch/internal/api/routes"
-	"github.com/unm4sked/finch/internal/configuration"
+	"github.com/unm4sked/finch/internal/configurations"
 	"github.com/unm4sked/finch/pkg/postgres"
 )
 
@@ -22,7 +22,7 @@ func main() {
 
 	defer database.Close()
 
-	configurationService := configuration.NewService(configuration.NewPostgresRepository(*database))
+	configurationService := configurations.NewService(configurations.NewPostgresRepository(*database))
 
 	app := fiber.New()
 	api := app.Group("/api").Group("/v1")

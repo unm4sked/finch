@@ -1,4 +1,4 @@
-package configuration
+package configurations
 
 import (
 	"context"
@@ -6,14 +6,13 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/unm4sked/finch/internal/entities"
 	"github.com/unm4sked/finch/pkg/postgres"
 )
 
 type Repository interface {
 	CreateConfiguration(id string, description string) error
-	GetConfigurationById(id string) (entities.Configuration, error)
-	GetConfigurations() ([]entities.Configuration, error)
+	GetConfigurationById(id string) (Configuration, error)
+	GetConfigurations() ([]Configuration, error)
 	DeleteConfiguration(id string) error
 	UpdateConfiguration(id string, description string) error
 }
@@ -37,21 +36,21 @@ func (r *repository) CreateConfiguration(id string, description string) error {
 	return nil
 }
 
-func (r *repository) GetConfigurationById(id string) (entities.Configuration, error) {
-	var deafultConfiguration entities.Configuration
+func (r *repository) GetConfigurationById(id string) (Configuration, error) {
+	var deafultConfiguration Configuration
 	rows, err := r.db.Query(context.Background(), "SELECT * FROM configurations WHERE id = $1 LIMIT 1", id)
 	if err != nil {
 		return deafultConfiguration, err
 	}
-	configuration, err := pgx.CollectOneRow(rows, pgx.RowToStructByPos[entities.Configuration])
+	configuration, err := pgx.CollectOneRow(rows, pgx.RowToStructByPos[Configuration])
 	if err != nil {
 		return deafultConfiguration, err
 	}
 	return configuration, nil
 }
 
-func (r *repository) GetConfigurations() ([]entities.Configuration, error) {
-	emptyConfiguratios := make([]entities.Configuration, 0)
+func (r *repository) GetConfigurations() ([]Configuration, error) {
+	emptyConfiguratios := make([]Configuration, 0)
 	rows, err := r.db.Query(context.Background(), "SELECT * FROM configurations")
 	if err != nil {
 		fmt.Println("Error: ", err)
@@ -60,7 +59,7 @@ func (r *repository) GetConfigurations() ([]entities.Configuration, error) {
 
 	defer rows.Close()
 
-	configuratios, err := pgx.CollectRows(rows, pgx.RowToStructByName[entities.Configuration])
+	configuratios, err := pgx.CollectRows(rows, pgx.RowToStructByName[Configuration])
 
 	if err != nil {
 		fmt.Println("Error while collecting rows", err)

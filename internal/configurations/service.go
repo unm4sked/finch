@@ -1,16 +1,15 @@
-package configuration
+package configurations
 
 import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/unm4sked/finch/internal/entities"
 )
 
 type Service interface {
 	Create(description string) (string, error)
-	GetConfigurations() ([]entities.Configuration, error)
-	GetConfiguration(id string) (entities.Configuration, error)
+	GetConfigurations() ([]Configuration, error)
+	GetConfiguration(id string) (Configuration, error)
 	RemoveConfiguration(id string) error
 	UpdateConfigurationDescription(id string, description string) error
 }
@@ -35,18 +34,18 @@ func (s *service) Create(description string) (string, error) {
 	return id, nil
 }
 
-func (s *service) GetConfigurations() ([]entities.Configuration, error) {
+func (s *service) GetConfigurations() ([]Configuration, error) {
 	configs, err := s.repository.GetConfigurations()
-	var configsDefault []entities.Configuration
+	var configsDefault []Configuration
 	if err != nil {
 		fmt.Println("Error Service here")
 		return configsDefault, err
 	}
 	return configs, nil
 }
-func (s *service) GetConfiguration(id string) (entities.Configuration, error) {
+func (s *service) GetConfiguration(id string) (Configuration, error) {
 	config, err := s.repository.GetConfigurationById(id)
-	var configDefault entities.Configuration
+	var configDefault Configuration
 
 	if err != nil {
 		fmt.Println("Error Service here")

@@ -6,10 +6,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/unm4sked/finch/internal/api/responses"
-	"github.com/unm4sked/finch/internal/configuration"
+	"github.com/unm4sked/finch/internal/configurations"
 )
 
-func GetConfigurationById(service configuration.Service) fiber.Handler {
+func GetConfigurationById(service configurations.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		configuration, err := service.GetConfiguration(id)
@@ -20,7 +20,7 @@ func GetConfigurationById(service configuration.Service) fiber.Handler {
 	}
 }
 
-func GetConfigurations(service configuration.Service) fiber.Handler {
+func GetConfigurations(service configurations.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		configs, err := service.GetConfigurations()
 		if err != nil {
@@ -30,7 +30,7 @@ func GetConfigurations(service configuration.Service) fiber.Handler {
 	}
 }
 
-func DeleteConfiguration(service configuration.Service) fiber.Handler {
+func DeleteConfiguration(service configurations.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		err := service.RemoveConfiguration(id)
@@ -41,7 +41,7 @@ func DeleteConfiguration(service configuration.Service) fiber.Handler {
 	}
 }
 
-func PatchConfiguration(service configuration.Service) fiber.Handler {
+func PatchConfiguration(service configurations.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		updateConfigurationPayload := struct {
 			Description string `json:"description"`
@@ -61,7 +61,7 @@ func PatchConfiguration(service configuration.Service) fiber.Handler {
 	}
 }
 
-func CreateConfiguration(service configuration.Service) fiber.Handler {
+func CreateConfiguration(service configurations.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		createConfigurationPayload := struct {
 			Description string `json:"description"`

@@ -1,4 +1,4 @@
-package entities
+package configurations
 
 import "time"
 
