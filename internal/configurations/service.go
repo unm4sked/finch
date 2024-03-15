@@ -46,7 +46,6 @@ func (s *service) GetConfigurations() ([]Configuration, error) {
 func (s *service) GetConfiguration(id string) (Configuration, error) {
 	config, err := s.repository.GetConfigurationById(id)
 	var configDefault Configuration
-
 	if err != nil {
 		fmt.Println("Error Service here")
 		return configDefault, err
